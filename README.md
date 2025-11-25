@@ -302,14 +302,13 @@ You only need to create a custom tokenizer if:
 
 **Vocab Size Examples:**
 - **Default (23 languages):** Check your downloaded `tokenizer.json` for exact count
-- **Custom Turkish:** ~2454 tokens (if you want Turkish-only optimization)
 - **Custom French:** ~200 tokens (if you want French-only optimization)
 - **Custom German:** ~180 tokens (if you want German-only optimization)
 
 **Important:** The default tokenizer should work for most languages. Only customize if you have specific requirements or encounter missing characters.
 
 ### VAD Integration
-During inference, `inference.py` uses Silero VAD to prevent hallucinations and sentence-ending elongations. This automatically trims unwanted silence and noise from generated audio. Requires internet connection on first run (downloads model automatically).
+During inference, `inference.py` uses Silero VAD to prevent hallucinations and sentence-ending elongations. This automatically trims unwanted silence and noise from generated audio.
 
 ### Audio Processing Pipeline
 All audio processing uses **FFmpeg** for professional-quality results:
@@ -343,15 +342,8 @@ All audio processing uses **FFmpeg** for professional-quality results:
 *   **Solution:** Reduce `BATCH_SIZE` in `src/config.py` or enable gradient accumulation.
 
 **Poor Quality Output:**
-*   Check reference audio quality (should be clean, 3-10 seconds)
+*   Check reference audio quality (should be clean, at least 5 seconds)
 *   Ensure adequate training data (minimum 30 minutes recommended)
-*   Verify sample rates are correct (16kHz for training, 24kHz for output)
-
----
-
-## 📄 License
-
-This project builds upon the Chatterbox TTS model. Please refer to the original Chatterbox repository for license information.
 
 ---
 
