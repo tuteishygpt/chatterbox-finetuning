@@ -44,6 +44,12 @@ def main():
     new_t3_config = original_t3_config
     new_t3_config.text_tokens_dict_size = cfg.new_vocab_size
 
+    # We prevent caching during training.
+    if hasattr(new_t3_config, "use_cache"):
+        new_t3_config.use_cache = False
+    else:
+        setattr(new_t3_config, "use_cache", False)
+
     new_t3_model = T3(hp=new_t3_config)
 
     # 3. TRANSFER WEIGHTS
@@ -106,7 +112,8 @@ def main():
         dataloader_num_workers=4,    
         report_to=["tensorboard"],
         fp16=True if torch.cuda.is_available() else False,
-        save_total_limit=2
+        save_total_limit=2,
+        gradient_checkpointing=True, # This setting theoretically reduces VRAM usage by 60%.
     )
 
     trainer = Trainer(
