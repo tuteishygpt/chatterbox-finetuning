@@ -11,7 +11,7 @@ from safetensors.torch import load_file
 from .models.t3 import T3
 from .models.s3tokenizer import S3_SR, drop_invalid_tokens
 from .models.s3gen import S3GEN_SR, S3Gen
-from .models.tokenizers import EnTokenizer
+from .models.tokenizers import MTLTokenizer
 from .models.voice_encoder import VoiceEncoder
 from .models.t3.modules.cond_enc import T3Cond
 
@@ -112,7 +112,7 @@ class ChatterboxTTS:
         t3: T3,
         s3gen: S3Gen,
         ve: VoiceEncoder,
-        tokenizer: EnTokenizer,
+        tokenizer: MTLTokenizer,
         device: str,
         conds: Conditionals = None,
     ):
@@ -163,7 +163,7 @@ class ChatterboxTTS:
         )
         s3gen.to(device).eval()
 
-        tokenizer = EnTokenizer(
+        tokenizer = MTLTokenizer(
             str(ckpt_dir / "tokenizer.json")
         )
 
