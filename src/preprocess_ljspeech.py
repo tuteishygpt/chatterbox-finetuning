@@ -81,7 +81,11 @@ def preprocess_dataset_ljspeech(config, tts_engine: ChatterboxTTS):
             
             clean_text = punc_norm(raw_text)
             
-            text_tokens = tts_engine.tokenizer.text_to_tokens(clean_text).squeeze(0).cpu()
+            # Tokenizer with language_id for multilingual support
+            text_tokens = tts_engine.tokenizer.text_to_tokens(
+                clean_text, 
+                language_id=config.language_id
+            ).squeeze(0).cpu()
 
 
             save_path = os.path.join(config.preprocessed_dir, filename.replace(".wav", ".pt"))

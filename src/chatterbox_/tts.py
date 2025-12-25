@@ -125,6 +125,15 @@ class ChatterboxTTS:
         self.conds = conds
         self.watermarker = perth.PerthImplicitWatermarker()
 
+    def to(self, device):
+        self.device = device
+        self.t3 = self.t3.to(device)
+        self.s3gen = self.s3gen.to(device)
+        self.ve = self.ve.to(device)
+        if self.conds is not None:
+            self.conds.to(device)
+        return self
+
     @classmethod
     def from_local(cls, ckpt_dir, device) -> 'ChatterboxTTS':
         ckpt_dir = Path(ckpt_dir)
@@ -215,6 +224,7 @@ class ChatterboxTTS:
         exaggeration=0.5,
         cfg_weight=0.5,
         temperature=0.8,
+        language_id=None,
     ):
         if audio_prompt_path:
             self.prepare_conditionals(audio_prompt_path, exaggeration=exaggeration)
@@ -232,7 +242,7 @@ class ChatterboxTTS:
 
         # Norm and tokenize text
         text = punc_norm(text)
-        text_tokens = self.tokenizer.text_to_tokens(text).to(self.device)
+        text_tokens = self.tokenizer.text_to_tokens(text, language_id=language_id).to(self.device)
 
         if cfg_weight > 0.0:
             text_tokens = torch.cat([text_tokens, text_tokens], dim=0)  # Need two seqs for CFG

@@ -23,6 +23,7 @@ REPO_ID = "ResembleAI/chatterbox"
 # Supported languages for the multilingual model
 SUPPORTED_LANGUAGES = {
   "ar": "Arabic",
+  "be": "Belarusian",
   "da": "Danish",
   "de": "German",
   "el": "Greek",
@@ -151,6 +152,15 @@ class ChatterboxMultilingualTTS:
         self.device = device
         self.conds = conds
         self.watermarker = perth.PerthImplicitWatermarker()
+
+    def to(self, device):
+        self.device = device
+        self.t3 = self.t3.to(device)
+        self.s3gen = self.s3gen.to(device)
+        self.ve = self.ve.to(device)
+        if self.conds is not None:
+            self.conds.to(device)
+        return self
 
     @classmethod
     def get_supported_languages(cls):

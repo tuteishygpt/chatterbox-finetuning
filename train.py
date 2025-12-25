@@ -29,6 +29,7 @@ def main():
     
     logger.info(f"Device: {device}")
     logger.info(f"Model Directory: {cfg.model_dir}")
+    logger.info(f"Language ID: {cfg.language_id}")
 
     # 1. LOAD ORIGINAL MODEL TEMPORARILY
     logger.info("Loading original model to extract weights...")

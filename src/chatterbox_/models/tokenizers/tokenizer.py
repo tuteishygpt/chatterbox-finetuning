@@ -27,12 +27,12 @@ class EnTokenizer:
         assert SOT in voc
         assert EOT in voc
 
-    def text_to_tokens(self, text: str):
-        text_tokens = self.encode(text)
+    def text_to_tokens(self, text: str, language_id: str = None, lowercase: bool = True, nfkd_normalize: bool = True):
+        text_tokens = self.encode(text, language_id=language_id)
         text_tokens = torch.IntTensor(text_tokens).unsqueeze(0)
         return text_tokens
 
-    def encode(self, txt: str):
+    def encode(self, txt: str, language_id: str = None, lowercase: bool = True, nfkd_normalize: bool = True):
         """
         clean_text > (append `lang_id`) > replace SPACE > encode text using Tokenizer
         """
