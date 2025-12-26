@@ -20,10 +20,16 @@ def main():
     logger.info(f"WAV Directory: {cfg.wav_dir}")
     logger.info(f"Output Directory: {cfg.preprocessed_dir}")
     
+<<<<<<< HEAD
     # Load TTS engine
     device = "cuda" if torch.cuda.is_available() else "cpu"
     logger.info(f"Loading TTS engine on {device}...")
     tts_engine = ChatterboxTTS.from_local(cfg.model_dir, device=device, load_t3=False)
+=======
+    # Load TTS engine on CPU first
+    logger.info("Loading TTS engine...")
+    tts_engine = ChatterboxTTS.from_local(cfg.model_dir, device="cpu")
+>>>>>>> fba7d4db8b6862cc7f921959a1a183c93566f449
     
     # Run preprocessing
     if cfg.ljspeech:

@@ -30,7 +30,10 @@ def inspect_file(file_path, tokenizer_path):
                 
                 # Check for [be] token
                 be_id = tokenizer.tokenizer.token_to_id("[be]")
+<<<<<<< HEAD
                 
+=======
+>>>>>>> fba7d4db8b6862cc7f921959a1a183c93566f449
                 print(f"Token ID for '[be]': {be_id}")
                 
                 # Check first token
