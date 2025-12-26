@@ -127,7 +127,8 @@ class ChatterboxTTS:
 
     def to(self, device):
         self.device = device
-        self.t3 = self.t3.to(device)
+        if self.t3 is not None:
+            self.t3 = self.t3.to(device)
         self.s3gen = self.s3gen.to(device)
         self.ve = self.ve.to(device)
         if self.conds is not None:
@@ -135,7 +136,7 @@ class ChatterboxTTS:
         return self
 
     @classmethod
-    def from_local(cls, ckpt_dir, device) -> 'ChatterboxTTS':
+    def from_local(cls, ckpt_dir, device, load_t3=True) -> 'ChatterboxTTS':
         ckpt_dir = Path(ckpt_dir)
 
         # Always load to CPU first for non-CUDA devices to handle CUDA-saved models
@@ -146,22 +147,29 @@ class ChatterboxTTS:
 
         ve = VoiceEncoder()
         ve.load_state_dict(
-            load_file(ckpt_dir / "ve.safetensors")
+            load_file(ckpt_dir / "ve.safetensors", device=device)
         )
         ve.to(device).eval()
 
-        t3 = T3()
-        t3_state = load_file(ckpt_dir / "t3_cfg.safetensors")
-        if "model" in t3_state.keys():
-            t3_state = t3_state["model"][0]
-        t3.load_state_dict(t3_state)
-        t3.to(device).eval()
+        t3 = None
+        if load_t3:
+            t3 = T3()
+            t3_state = load_file(ckpt_dir / "t3_cfg.safetensors", device=device)
+            if "model" in t3_state.keys():
+                t3_state = t3_state["model"][0]
+            
+            # Initialize model on target device to avoid CPU RAM spike during load
+            t3.to(device)
+            t3.load_state_dict(t3_state)
+            t3.eval()
 
         s3gen = S3Gen()
-        s3gen.load_state_dict(
-            load_file(ckpt_dir / "s3gen.safetensors"), strict=False
-        )
-        s3gen.to(device).eval()
+        s3gen_state = load_file(ckpt_dir / "s3gen.safetensors", device=device)
+        
+        # Initialize model on target device
+        s3gen.to(device)
+        s3gen.load_state_dict(s3gen_state, strict=False)
+        s3gen.eval()
 
         tokenizer = MTLTokenizer(
             str(ckpt_dir / "tokenizer.json")

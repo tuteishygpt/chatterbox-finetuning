@@ -63,7 +63,7 @@ def main():
 
     # 4. PREPARE ENGINE FOR TRAINING
     # Reload engine components (VoiceEncoder, S3Gen) but inject our new T3
-    tts_engine_new = ChatterboxTTS.from_local(cfg.model_dir, device="cpu")
+    tts_engine_new = ChatterboxTTS.from_local(cfg.model_dir, device="cpu", load_t3=False)
     tts_engine_new.t3 = new_t3_model 
 
     # Freeze other components
